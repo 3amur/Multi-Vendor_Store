@@ -14,4 +14,4 @@ use App\Http\Controllers\DashboardController;
 |
 */
 
-Route::get('/o', [DashboardController::class, 'index']);
+Route::get('/', [DashboardController::class, 'index']);
