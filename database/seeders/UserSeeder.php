@@ -21,14 +21,14 @@ class UserSeeder extends Seeder
         User::create([
             'name' => 'OmarMuhammed',
             'email' => 'admin@gmail.com',
-            'password' => Hash::make('password'),
+            'password' => Hash::make('123456789'),
             'phone_number' => '01061138754',
         ]);
         // query builder
         DB::table('users')->insert([
             'name' => 'OmarMuhammed',
             'email' => 'omar7@gmail.com',
-            'password' => Hash::make('password'),
+            'password' => Hash::make('123456789'),
             'phone_number' => '0106113875',
         ]);
     }

@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
+    public function __construct(){
+        $this->middleware("auth");
+    }
     public function index(){
         // response() : view , json, redirect, file
         return response()->view('dashboard.index'); 
