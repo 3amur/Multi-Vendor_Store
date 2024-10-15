@@ -7,6 +7,16 @@
 @endsection
 
 @section('content')
+    <div class="mb-5">
+        <a href="{{ route('categories.create') }}" class="btn btn-sm btn-outline-primary">Create Category</a>
+    </div>
+
+    @if(session()->has('success'))
+        <div class="text-center alert alert-success">
+            <strong>{{ session('success') }}</strong>
+        </div>
+    @endif
+
     <table class="table table-bordered text-center">
         <thead>
             <tr>
@@ -22,11 +32,11 @@
             <tr>
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $category->name }}</td>
-                <td>{{ $category->parent }}</td>
+                <td>{{ $category->parent_id }}</td>
                 <td>{{ $category->created_at }}</td>
-                <td><a href="{{ route('categories.edit') }}" class="btn btn-sm btn-outline-success">Edit</a></td>
+                <td><a href="{{ route('categories.edit', [$category->id]) }}" class="btn btn-sm btn-outline-success">Edit</a></td>
                 <td>
-                    <form action="{{ route('categories.destroy') }}" method="post">
+                    <form action="{{ route('categories.destroy', $category->id) }}" method="post">
                         @csrf
                         {{-- Form method spoofing 2 wayes --}}
                         {{-- @method('delete') --}}

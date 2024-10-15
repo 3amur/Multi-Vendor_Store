@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use index;
 use App\Models\Category;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -39,7 +39,22 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->input('name'); // from input form
+        $request->post('name'); // from post method
+        $request->get('name'); // from (get & post) method 
+        $request->query('name'); // from query param url
+        $request->name; // name of input
+        $request['name'];
+
+        $request->all(); // return array of data
+        $request->only(['name', 'status']); // only include that input names
+        $request->except(['name','status']); // without that names
+        // requuest merge slug
+        $request->merge(['slug' => Str::slug($request->post('name'))]);
+
+        $category = Category::create($request->all());
+        //PRG
+        return redirect()->route('categories.index')->with('success', 'Category Added Successfully');
     }
 
     /**
