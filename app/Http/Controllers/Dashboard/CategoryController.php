@@ -52,7 +52,7 @@ class CategoryController extends Controller
         // requuest merge slug
         $request->merge(['slug' => Str::slug($request->post('name'))]);
 
-        $category = Category::create($request->all());
+        Category::create($request->all());
         //PRG
         return redirect()->route('categories.index')->with('success', 'Category Added Successfully');
     }
@@ -76,7 +76,9 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        //
+        $category = Category::find( $id );
+        $parents = Category::where('id', '<>', $id)->get();
+        return view('dashboard.categories.create_edit', compact('category', 'parents'));
     }
 
     /**
