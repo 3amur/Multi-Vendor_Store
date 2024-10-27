@@ -14,6 +14,7 @@
         @endisset
         <div class="form-group">
             <label for="">Category Name</label>
+            @dd($category)
             <input class="form-control" type="text" name="name" value="{{ $category->name }}">
         </div>
         <div class="form-group">

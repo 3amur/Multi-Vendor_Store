@@ -34,14 +34,14 @@
                 <td>{{ $category->name }}</td>
                 <td>{{ $category->parent_id }}</td>
                 <td>{{ $category->created_at }}</td>
-                <td><a href="{{ route('categories.edit', [$category->id]) }}" class="btn btn-sm btn-outline-success">Edit</a></td>
+                <td><a href="{{ route('categories.edit', $category->id) }}" class="btn btn-sm btn-outline-success">Edit</a></td>
                 <td>
                     <form action="{{ route('categories.destroy', $category->id) }}" method="post">
                         @csrf
                         {{-- Form method spoofing 2 wayes --}}
-                        {{-- @method('delete') --}}
-                        <input type="hidden" name="_method" value="delete">
-                        <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                        {{-- @method('delete') --}} 
+                        <input type="hidden" name="_method" value="delete"> 
+                        <button type="submit" class="btn btn-sm btn-outline-danger delete" data-id={{ $category->id }} data-url={{URL('dashboard/categories/. $category->id ./destroy')}}>Delete</button>
                     </form>
                 </td>
             </tr>

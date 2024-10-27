@@ -12,8 +12,9 @@ Route::group([
     // 'namespace' => 'App\Http\Controllers\Dashboard',
     ], function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+        // edit & delete {category}
         Route::resource('/categories', CategoryController::class)->names([
-            'index' => 'categories',
+            'index' => 'categories.index',
             'create' => 'categories.create',
         ]);
 });
