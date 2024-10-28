@@ -65,7 +65,7 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        //
+        abort(404);
     }
 
     /**
@@ -78,7 +78,12 @@ class CategoryController extends Controller
     {
         try{
             $category = Category::find( $id);
-            $parents = Category::where('id', '<>', $id)->get();
+            // select * categories where id != $id & (parent_id != $id or perent_id is Null)
+            $parents = Category::where('id', '<>', $id)
+                ->where(function ($query) use ($id) {
+                    $query->whereNull('parent_id')
+                        ->orWhere('parent_id', '<>', $id);
+                    })->get();  
             return view('dashboard.categories.create_edit', compact('category', 'parents'));
         } catch (\Exception $e) {
             abort(404);
