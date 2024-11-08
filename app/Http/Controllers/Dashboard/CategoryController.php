@@ -6,6 +6,7 @@ use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
@@ -39,20 +40,26 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $request->input('name'); // from input form
-        $request->post('name'); // from post method
-        $request->get('name'); // from (get & post) method 
-        $request->query('name'); // from query param url
-        $request->name; // name of input
-        $request['name'];
+        /********** request Data includes **********/
+        // $request->input('name'); // from input form
+        // $request->post('name'); // from post method
+        // $request->get('name'); // from (get & post) method 
+        // $request->query('name'); // from query param url
+        // $request->name; // name of input
+        // $request['name'];
+        // $request->all(); // return array of data
+        // $request->only(['name', 'status']); // only include that input names
+        // $request->except(['name','status']); // without that names
 
-        $request->all(); // return array of data
-        $request->only(['name', 'status']); // only include that input names
-        $request->except(['name','status']); // without that names
-        // requuest merge slug
+        // merge slug to request [key => value]
         $request->merge(['slug' => Str::slug($request->post('name'))]);
-
-        Category::create($request->all());
+        $data = $request->except('image');
+        if($request->hasFile('image')){
+            $file = $request->file('image'); // uploadedFile Object
+            $path = $file->store('categories', 'public');
+            $data['image'] = $path;
+        }
+        Category::create($data);
         //PRG
         return redirect()->route('categories.index')->with('success', 'Category Added Successfully');
     }
@@ -100,7 +107,21 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         $category = Category::findOrFail($id);
-        $category->update($request->all());
+        $oldImage = $category->image;
+        $request->merge(['slug' => Str::slug($request->post('name'))]); 
+
+        $data = $request->except('image');
+        if($request->hasFile('image')){
+            Storage::disk('public')->delete($oldImage);
+            $file = $request->file('image'); // uploadedFile Object
+            $path = $file->store('categories', 'public');
+            $data['image'] = $path;
+        }
+        $category->update($data);
+
+        if($oldImage && isset($data['image'])){
+            Storage::disk('public')->delete($oldImage);
+        }
         return redirect()->route('categories.index')->with('success', 'Category Updated Successfully!');
     }
 
