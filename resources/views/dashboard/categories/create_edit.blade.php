@@ -31,6 +31,9 @@
         </div>
         <div class="form-group">
             <label for="">Image</label>
+            @isset($category->image)
+             <img class="p-2" src="{{ asset('storage/'.$category->image) }}" style="width:150px; height:100px;" alt="category_img">
+            @endisset
             <input class="form-control" name="image" type="file">
         </div>
         <div class="form-group">

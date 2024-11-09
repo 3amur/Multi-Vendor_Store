@@ -23,6 +23,7 @@
                 <th>#</th>
                 <th>Name</th>
                 <th>Parent</th>
+                <th>Image</th>
                 <th>Created At</th>
                 <th colspan="2">Actions</th>
             </tr>
@@ -33,6 +34,9 @@
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $category->name }}</td>
                 <td>{{ $category->parent_id }}</td>
+                <td>
+                    <img src="{{ asset('storage/'.$category->image) }}" style="width:150px; height:100px;" alt="category_img">
+                </td>
                 <td>{{ $category->created_at }}</td>
                 <td><a href="{{ route('categories.edit', $category->id) }}" class="btn btn-sm btn-outline-success">Edit</a></td>
                 <td>

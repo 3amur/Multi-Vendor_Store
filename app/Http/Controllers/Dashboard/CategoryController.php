@@ -118,10 +118,6 @@ class CategoryController extends Controller
             $data['image'] = $path;
         }
         $category->update($data);
-
-        if($oldImage && isset($data['image'])){
-            Storage::disk('public')->delete($oldImage);
-        }
         return redirect()->route('categories.index')->with('success', 'Category Updated Successfully!');
     }
 
@@ -133,10 +129,10 @@ class CategoryController extends Controller
      */
     public function destroy($category)
     {
-        // $category = Category::findOrFail($category);
-        // $category->delete($category);
-        
-        Category::destroy($category);
+        $category = Category::findOrFail($category);
+        $category->delete($category);
+
+        Storage::disk('public')->delete($category->image);
         return redirect()->route('categories.index')->with('success', 'Category Deleted Successfully!');
     }
 }
