@@ -7,6 +7,17 @@
 @endsection
 {{-- start content --}}
 @section('content')
+    {{-- check errors --}}
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <h4>Error Ocurred !</h4>
+            <ul>
+                @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     <form action="{{ isset($category) ? route('categories.update', $category->id) : route('categories.store') }}" method="post" enctype="multipart/form-data">
         @csrf
         @isset($category)

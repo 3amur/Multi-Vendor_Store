@@ -50,7 +50,19 @@ class CategoryController extends Controller
         // $request->all(); // return array of data
         // $request->only(['name', 'status']); // only include that input names
         // $request->except(['name','status']); // without that names
-
+       
+        // make validation 
+        $request->validate([
+            'name' => 'required|string|min:3|max:255',
+            'parent_id' => [
+                'nullable','int','exists:categories,id',
+            ],
+            'image' => [
+                'image','mimes:jpg,png,jpeg,gif',
+            ],
+            'status' => 'in:active,archived',
+        ]);
+        
         // merge slug to request [key => value]
         $request->merge(['slug' => Str::slug($request->post('name'))]);
         $data = $request->except('image');
