@@ -52,17 +52,7 @@ class CategoryController extends Controller
         // $request->except(['name','status']); // without that names
        
         // make validation 
-        $request->validate([
-            'name' => 'required|string|min:3|max:255',
-            'parent_id' => [
-                'nullable','int','exists:categories,id',
-            ],
-            'image' => [
-                'image','mimes:jpg,png,jpeg,gif',
-            ],
-            'status' => 'in:active,archived',
-        ]);
-        
+        $request->validate(Category::rules());
         // merge slug to request [key => value]
         $request->merge(['slug' => Str::slug($request->post('name'))]);
         $data = $request->except('image');
@@ -118,6 +108,8 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // make validation 
+        $request->validate(Category::rules($id));
         $category = Category::findOrFail($id);
         $oldImage = $category->image;
         $request->merge(['slug' => Str::slug($request->post('name'))]); 
@@ -143,8 +135,9 @@ class CategoryController extends Controller
     {
         $category = Category::findOrFail($category);
         $category->delete($category);
-
-        Storage::disk('public')->delete($category->image);
+        if($category->image){
+            Storage::disk('public')->delete($category->image);
+        }
         return redirect()->route('categories.index')->with('success', 'Category Deleted Successfully!');
     }
 }
