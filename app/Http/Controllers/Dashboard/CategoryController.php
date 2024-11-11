@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -38,7 +39,7 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
         /********** request Data includes **********/
         // $request->input('name'); // from input form
@@ -51,16 +52,18 @@ class CategoryController extends Controller
         // $request->only(['name', 'status']); // only include that input names
         // $request->except(['name','status']); // without that names
        
-        // make validation 
-        $request->validate(Category::rules());
+        // make custom validation with messages 
+        // $request->validate(Category::rules(),[
+        //     // to make custom validation messages
+        //     'name.required' => 'filed :attribute is required',
+        //     'unique' => 'filed :attribute exists',
+        // ]);
+        
         // merge slug to request [key => value]
         $request->merge(['slug' => Str::slug($request->post('name'))]);
         $data = $request->except('image');
-        if($request->hasFile('image')){
-            $file = $request->file('image'); // uploadedFile Object
-            $path = $file->store('categories', 'public');
-            $data['image'] = $path;
-        }
+        $newImage = $this->uploadImage($request,'image');
+        $data['image'] = $newImage;
         Category::create($data);
         //PRG
         return redirect()->route('categories.index')->with('success', 'Category Added Successfully');
@@ -106,22 +109,22 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CategoryRequest $request, $id)
     {
-        // make validation 
-        $request->validate(Category::rules($id));
         $category = Category::findOrFail($id);
         $oldImage = $category->image;
         $request->merge(['slug' => Str::slug($request->post('name'))]); 
 
         $data = $request->except('image');
-        if($request->hasFile('image')){
-            Storage::disk('public')->delete($oldImage);
-            $file = $request->file('image'); // uploadedFile Object
-            $path = $file->store('categories', 'public');
-            $data['image'] = $path;
+        $newImage = $this->uploadImage($request, 'image');
+        if($newImage){
+            $data['image'] = $newImage;
         }
         $category->update($data);
+        
+        if($request->file('image') && $oldImage){
+            Storage::disk('public')->delete($oldImage);
+        }
         return redirect()->route('categories.index')->with('success', 'Category Updated Successfully!');
     }
 
@@ -139,5 +142,14 @@ class CategoryController extends Controller
             Storage::disk('public')->delete($category->image);
         }
         return redirect()->route('categories.index')->with('success', 'Category Deleted Successfully!');
+    }
+
+    protected function uploadImage(Request $request, $fileName){
+        if($request->hasFile($fileName)){
+            $file = $request->file($fileName); // uploadedFile Object
+            $path = $file->store('categories', 'public');
+            return $path;
+        }
+        return null;
     }
 }

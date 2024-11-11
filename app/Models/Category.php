@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Validation\Rule;
 
 class Category extends Model
 {
@@ -13,7 +14,13 @@ class Category extends Model
     // make static method rules
     public static function rules($id = 0){
         return [
-            'name' => "required|string|min:3|max:255|unique:categories,name,$id",
+            'name' => [ 
+                'required',
+                'string',
+                'min:3',
+                'max:255',
+                Rule::unique('categories','name')->ignore($id),
+            ],
             'parent_id' => [
                 'nullable',
                 'integer',
