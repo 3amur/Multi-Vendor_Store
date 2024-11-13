@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Rules\ForbiddenName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\Rule;
@@ -20,6 +21,23 @@ class Category extends Model
                 'min:3',
                 'max:255',
                 Rule::unique('categories','name')->ignore($id),
+                /********** first step closerFunc()) ************/
+                // function($attribute, $value, $fails){
+                //     switch(strtolower($value)){
+                //         case 'admin';
+                //             break;
+                //         case 'root';
+                //             break;
+                //         case 'administrator';
+                //             break;
+                //     }
+                //     $fails('this name is forbidden ❌'); // error message about this rule
+                // }
+                /********** second step General ==> rule class ************/
+                // new ForbiddenName(['admin', 'adminstrator', 'root']),
+                // /********** third step General ==> rule ************/
+                'forbidden:admin, administrator, root',
+
             ],
             'parent_id' => [
                 'nullable',
