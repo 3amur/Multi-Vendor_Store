@@ -10,12 +10,9 @@
     <div class="mb-5">
         <a href="{{ route('categories.create') }}" class="btn btn-sm btn-outline-primary">Create Category</a>
     </div>
-
-    @if(session()->has('success'))
-        <div class="text-center alert alert-success">
-            <strong>{{ session('success') }}</strong>
-        </div>
-    @endif
+    {{-- alert component --}}
+    <x-alert type="success" message="success" />  {{-- success (store & edit) --}}
+    <x-alert type="danger" message="danger" />  {{-- success (delete) --}}
 
     <table class="table table-bordered text-center">
         <thead>

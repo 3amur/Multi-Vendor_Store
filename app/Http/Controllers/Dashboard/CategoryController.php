@@ -90,6 +90,9 @@ class CategoryController extends Controller
     {
         try{
             $category = Category::find( $id);
+            if (!$category){
+                return redirect()->back();
+            }
             // select * categories where id != $id & (parent_id != $id or perent_id is Null)
             $parents = Category::where('id', '<>', $id)
                 ->where(function ($query) use ($id) {
@@ -141,7 +144,7 @@ class CategoryController extends Controller
         if($category->image){
             Storage::disk('public')->delete($category->image);
         }
-        return redirect()->route('categories.index')->with('success', 'Category Deleted Successfully!');
+        return redirect()->route('categories.index')->with('danger', 'Category Deleted Successfully!');
     }
 
     protected function uploadImage(Request $request, $fileName){

@@ -18,6 +18,3 @@ Route::group([
             'create' => 'categories.create',
         ]);
 });
-
-// Route::middleware('auth')->prefix('dashboard')->group(function () {
-// });

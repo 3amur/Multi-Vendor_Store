@@ -24,17 +24,8 @@
             @method('PUT')
         @endisset
         <div class="form-group">
-            <label for="">Category Name</label>
-            <input @class([
-                'form-control',
-                'is-invalid' => $errors->has('name'),
-                ])
-            type="text" name="name" value="{{ isset($category) ? $category->name : old('name') }}">
-            @error('name')
-                <div class="invalid-feedback">
-                    {{ $message }}
-                </div>
-            @enderror
+        {{-- input component --}}
+        <x-form.input label="Category Name" name="name" :value=" $category->name ?? old('name') " />
         </div>
         <div class="form-group">
             <label for="">Category Parent</label>
