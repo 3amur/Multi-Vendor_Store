@@ -45,54 +45,18 @@
              @enderror
         </div>
         <div class="form-group">
-            <label for="description">Description</label>
-            <textarea @class([
-                'form-control',
-                'is-invalid' => $errors->has('description'),
-                ]) 
-            name="description" id="description">{{ isset($category) ? $category->description : old('description') }}</textarea>
-            @error('description')
-            <div class="invalid-feedback">
-                {{ $message }}
-            </div>
-            @enderror
+            <x-form.label for="description">Description</x-form.label>
+            <x-form.textarea name="description" :value=" $category->description ?? old('description') " />
         </div>
         <div class="form-group">
-            <label for="">Image</label>
+            <x-form.input label="Image" type="file" name="image" accept="image/*" />
             @isset($category->image)
              <img class="p-2" src="{{ asset('storage/'.$category->image) }}" style="width:150px; height:100px;" alt="category_img">
             @endisset
-            <input @class([
-                'form-control',
-                'is-invalid' => $errors->has('image'),
-                ]) name="image" type="file">
-            @error('image')
-            <div class="invalid-feedback">
-                {{ $message }}
-            </div>
-            @enderror
         </div>
         <div class="form-group">
-            <label for="status">Status</label> 
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="status" id="active" value="active" @checked(old('status', isset($category) ? $category->status : '') == 'active')>
-                <label class="form-check-label" for="active">Active</label>
-                @error('active')
-                <div class="invalid-feedback">
-                    {{ $message }}
-                </div>
-                @enderror
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="status" id="archived" value="archived" @checked(old('status', isset($category) ? $category->status : '') == 'archived')>
-
-                <label class="form-check-label" for="archived">Archived</label>   
-                @error('archived')
-                <div class="invalid-feedback">
-                    {{ $message }}
-                </div>
-                @enderror
-            </div>       
+            <x-form.label for="status">Status</x-form.label> 
+            <x-form.radio-button name="status" :checked=" $category->status ?? '' " :options="['active' => 'Active', 'archived' => 'Archived']" />      
         </div>
         <div class="form-group">
             <button type="submit" class="btn btn-primary">Send</button>
