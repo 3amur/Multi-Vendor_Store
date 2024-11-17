@@ -4,7 +4,7 @@
         @foreach ($items as $item)
         {{-- @dd($item); --}}
         <li class="nav-item">
-            <a href="{{ url($item['route']) }}" class="nav-link">
+            <a href="{{ route($item['route']) }}" class="nav-link {{ Route::Is($item['active']) ? 'active' : '' }}">
                 <i class="{{ $item['icon'] }}"></i>
                 <p>
                     {{ $item['title'] }}
